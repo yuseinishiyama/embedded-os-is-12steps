@@ -1,3 +1,13 @@
 .DS_Store
 
 tmp/
+tools/
+!.gitkeep
+
+*.o
+*.a
+
+*.mot
+*.elf
+
+kzload
