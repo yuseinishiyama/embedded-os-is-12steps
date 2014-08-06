@@ -91,11 +91,30 @@ int putc(unsigned char c) {
   return serial_send_byte(SERIAL_DEFAULT_DEVICE, c);
 }
 
+unsigned char getc(void) {
+  unsigned char c = serial_recv_byte(SERIAL_DEFAULT_DEVICE);
+  c = (c == '\r') ? '\n' : c; // 改行コードの変換
+  putc(c); // エコーバック
+  return c;
+}
+
 // 文字列送信
 int puts(unsigned char *str) {
   while (*str)
     putc(*(str++));
   return 0;
+}
+
+int gets(unsigned char *buf) {
+  int i = 0;
+  unsigned char c;
+  do {
+    c = getc();
+    if (c == '\n')
+      c = '\0';
+    buf[i++] = c;
+  } while (c);
+  return i - 1;
 }
 
 // 16進数の数値送信。

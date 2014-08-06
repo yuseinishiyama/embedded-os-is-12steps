@@ -1,5 +1,6 @@
 #include "defines.h"
 #include "serial.h"
+#include "xmodem.h"
 #include "lib.h"
 
 static int init(void) {
@@ -16,6 +17,34 @@ static int init(void) {
   return 0;
 }
 
+// メモリの16進ダンプ出力
+static int dump(char *buf, long size) {
+  long i;
+
+  if (size < 0) {
+    puts("no data.\n");
+    return -1;
+  }
+  for (i = 0; i < size; i++) {
+    putxval(buf[i], 2);
+    if ((i & 0xf) == 15) {
+      puts("\n");
+    } else {
+      if ((i & 0xf) == 7) puts(" ");
+      puts(" ");
+    }
+  }
+  puts("\n");
+  
+  return 0;
+}
+
+static void wait() {
+  volatile long i;
+  for (i = 0; i < 300000; i++)
+    ;
+}
+
 int global_data = 0x10;
 int global_bss;
 static int static_data = 0x20;
@@ -29,9 +58,37 @@ static void printval(void) {
 }
 
 int main(void) {
+  static char buf[16];
+  static long size = -1;
+  static unsigned char *loadbuf = NULL;
+  extern int buffer_start; // バッファ領域を指すシンボル。リンカスクリプトで定義されている。
+    
   init();
-  puts("Hello World!\n");
+  puts("kzload (kozos boot loader) started.\n");
 
+  while (1) {
+    puts("kzload> ");
+    gets(buf); // シリアルからのコマンド受信。
+
+    if (!strcmp(buf, "load")) { // XMODEMでのダウンロード
+      loadbuf = (char *)(&buffer_start);
+      size = xmodem_recv(loadbuf);
+      wait();
+      if (size < 0) {
+        puts("\nXMODEM receive error!\n");
+      } else {
+        puts("\nXMODEM receive succeeded.\n");
+      }
+    } else if (!strcmp(buf, "dump")) { // メモリの16進ダンプ
+      puts("size: ");
+      putxval(size, 0);
+      puts("\n");
+      dump(loadbuf, size);
+    } else {
+      puts("unknown.\n");
+    }
+  }
+  
   printval();
   puts("overwrite variables.\n");
   global_data = 0x20;
