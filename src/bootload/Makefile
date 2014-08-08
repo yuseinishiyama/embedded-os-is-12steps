@@ -53,5 +53,5 @@ write :		$(TARGET).mot
 		$(H8WRITE) -3069 -f20 $(TARGET).mot $(H8WRITE_SERDEV)
 
 clean :
-		rm -f $(OBJS) $(TARGETS) $(TARGETS).elf $(TARGETS).mot
+		rm -f $(OBJS) $(TARGET) $(TARGET).elf $(TARGET).mot
 
