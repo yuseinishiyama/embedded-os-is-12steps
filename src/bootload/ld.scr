@@ -50,7 +50,7 @@ SECTIONS
              *(.bss)
              *(COMMON)
              _ebss = . ;
-        }
+        } > data AT > rom
 
         . = ALIGN(4);
         _end = . ;
