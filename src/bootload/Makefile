@@ -17,7 +17,7 @@ H8WRITE = $(PREFIX)/tools/kz_h8write
 
 H8WRITE_SERDEV = /dev/tty.usbserial-FTXPZO9L
 
-OBJS = vector.o startup.o main.o
+OBJS = vector.o startup.o intr.o main.o interrupt.o
 OBJS += lib.o serial.o xmodem.o elf.o
 
 TARGET = kzload
@@ -31,6 +31,7 @@ LFLAGS = -static -T ld.scr -L.
 
 .SUFFIXES: .c .o
 .SUFFIXES: .s .o
+.SUFFIXES: .S .o
 
 all :		$(TARGET)
 $(TARGET) :	$(OBJS)
@@ -42,6 +43,9 @@ $(TARGET) :	$(OBJS)
 		$(CC) -c $(CFLAGS) $<
 
 .s.o :		$<
+		$(CC) -c $(CFLAGS) $<
+
+.S.o :		$<
 		$(CC) -c $(CFLAGS) $<
 
 $(TARGET).mot :	$(TARGET)
