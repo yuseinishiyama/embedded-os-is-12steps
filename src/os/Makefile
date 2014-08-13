@@ -39,6 +39,9 @@ $(TARGET) :	$(OBJS)
 		cp $(TARGET) $(TARGET).elf
 		$(STRIP) $(TARGET)
 
+TAGS :		$(TARGET)
+		etags *.[ch]
+
 .c.o :		$<
 		$(CC) -c $(CFLAGS) $<
 
