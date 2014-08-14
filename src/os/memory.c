@@ -17,7 +17,7 @@ typedef struct _kzmem_pool {
 } kzmem_pool;
 
 /* メモリプールの定義 */
-static kzmem_pool[] = {
+static kzmem_pool pool[] = {
   { 16, 8, NULL }, { 32, 8, NULL }, { 64, 4, NULL},
 };
 
@@ -41,6 +41,16 @@ static int kzmem_init_pool(kzmem_pool *p) {
     mp = (kzmem_block *)((char *)mp + p->size);
     area += p->size;
   }
+
+  return 0;
+}
+
+int kzmem_init(void) {
+  int i;
+  for (i = 0; i < MEMORY_AREA_NUM; i++) {
+    kzmem_init_pool(&pool[i]);
+  }
+  return 0;
 }
 
 void *kzmem_alloc(int size) {
