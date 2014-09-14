@@ -14,7 +14,7 @@ int test11_2_main(int argc, char *argv[]) {
   puts("test11_2 send out.\n");
 
   /* 動的領域を送信 */
-  p = kz_malloc(18);
+  p = kz_kmalloc(18);
   strcpy(p, "allocated memory\n");
   puts("test11_2 send in.\n");
   kz_send(MSGBOX_ID_MSGBOX2, 18, p);
