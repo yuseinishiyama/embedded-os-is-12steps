@@ -58,18 +58,18 @@ static int consdrv_intrporc(struct consreg *cons) {
       c = '\n';
 
     send_string(cons, &c, 1); // エコーバック処理
-  }
 
-  if (cons->id) {
-    if (c != '\n') {
-      // 改行でないなら、受信バッファにバッファリングする
-      cons->recv_buf[cons->recv_len++] = c;
-    } else {
-      // Enterが押されたら、バッファの内容をコマンド処理スレッドに通知する。
-      p = kx_kmalloc(CONS_BUFFER_SIZE);
-      memcpy(p, cons->recv_buf, cons->recv_len);
-      kx_send(MSGBOX_ID_CONSINPUT, cons->recv_len, p);
-      cons->recv_len = 0;
+    if (cons->id) {
+      if (c != '\n') {
+        // 改行でないなら、受信バッファにバッファリングする
+        cons->recv_buf[cons->recv_len++] = c;
+      } else {
+        // Enterが押されたら、バッファの内容をコマンド処理スレッドに通知する。
+        p = kx_kmalloc(CONS_BUFFER_SIZE);
+        memcpy(p, cons->recv_buf, cons->recv_len);
+        kx_send(MSGBOX_ID_CONSINPUT, cons->recv_len, p);
+        cons->recv_len = 0;
+      }
     }
   }
 

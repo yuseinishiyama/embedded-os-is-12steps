@@ -66,7 +66,7 @@ int command_main(int argc, char *argv[]); // コマンドスレッド
 /* extern kz_thread_id_t test09_2_id; */
 /* extern kz_thread_id_t test09_3_id; */
 /* int test10_1_main(int argc, char *argv[]); */
-int test11_1_main(int argc, char *argv[]);
-int test11_2_main(int argc, char *argv[]);
+/* int test11_1_main(int argc, char *argv[]); */
+/* int test11_2_main(int argc, char *argv[]); */
 
 #endif
